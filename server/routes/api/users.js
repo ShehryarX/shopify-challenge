@@ -21,7 +21,7 @@ router.get("/test", (req, res) => res.json({ message: "Users works" }));
    @desc    Registers user with passed in fields
    @access  Public
  */
-router.post("/register", async (req, res) => {
+router.post("/register", (req, res) => {
   const { name, email, password } = req.body;
   const errors = {};
 
@@ -47,7 +47,7 @@ router.post("/register", async (req, res) => {
         }
         try {
           newUser.password = hash;
-          newUser.save();
+          await newUser.save();
           return res.json(newUser);
         } catch (err) {
           console.log(err);
@@ -105,13 +105,12 @@ router.post("/login", (req, res) => {
  * @desc    Return current user session
  * @access  Private
  */
-router.post(
+router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { id, name, email } = req.user;
 
-    // return user's name and email if authenticated
     return res.json({
       id,
       name,

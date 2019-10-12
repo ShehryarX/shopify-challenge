@@ -26,13 +26,9 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   multerUpload.any(),
   (req, res) => {
-    const { user, name, image } = req.body;
-
-    // create image detail object
-    const imageDetails = {
-      user: user.id,
-      name
-    };
+    const { user } = req;
+    const { name } = req.body;
+    const { path } = req.files[0];
 
     // find image
     Photo.find({ name }).then(images => {
@@ -40,29 +36,25 @@ router.post(
       if (images.length > 1) {
         return res.json("Image already exists");
       }
-
-      // set path for upload
-      imageDetails.path = req.files[0].path;
-
       // upload image to cloudinary
-      cloudinaryUpload
-        .upload(image)
-        .then(result => {
-          imageDetails.url = result.url;
-
-          // store photo on database
-          Photo.create(imageDetails, (err, created) => {
-            if (err) {
-              return res.status(500).json("Unable to upload image");
-            } else {
-              res.json({ message: "Successfully uploaded!" });
-            }
+      cloudinaryUpload(path)
+        .then(async result => {
+          // save on database
+          const photo = new Photo({
+            name,
+            user: user.id,
+            url: result.url
           });
+
+          try {
+            await photo.save();
+            return res.json(photo);
+          } catch (e) {
+            console.error(e);
+          }
         })
         .catch(err => {
-          return res
-            .status(500)
-            .json({ err, message: "Problem uploading image" });
+          console.log(err);
         });
     });
   }

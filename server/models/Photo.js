@@ -11,7 +11,8 @@ const PhotoSchema = new Schema({
     required: true
   },
   url: {
-    type: String
+    type: String,
+    required: true
   },
   date: {
     type: Date,

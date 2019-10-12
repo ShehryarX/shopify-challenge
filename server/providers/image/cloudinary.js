@@ -6,7 +6,7 @@ const cloudinary = require("cloudinary");
 const cloudinaryUpload = file => {
   return new Promise((resolve, reject) => {
     // uploades appropriate file
-    cloudinary.uploader(
+    cloudinary.uploader.upload(
       file,
       result => {
         resolve({ url: result.url, id: result.public_id });

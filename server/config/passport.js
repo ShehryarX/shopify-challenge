@@ -17,11 +17,11 @@ const options = {
  * Returns true in second done argument if user is authenticated,
  * otherwise false.
  */
-const strategy = async passport => {
+const strategy = passport => {
   passport.use(
-    new JwtStrategy(options, (jwt_payload, done) => {
+    new JwtStrategy(options, async (jwt_payload, done) => {
       try {
-        const user = User.findById(jwt_payload.id);
+        const user = await User.findById(jwt_payload.id);
         done(null, user || false);
       } catch (e) {
         console.error(e);

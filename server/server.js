@@ -27,7 +27,7 @@ mongoose
 // configure cloudinary
 const { apiKey, apiSecret } = require("./config/keys").cloudinaryConfig;
 cloudinary.config({
-  cloud_name: "shopify",
+  cloud_name: "dmvxreauf",
   api_key: apiKey,
   api_secret: apiSecret
 });
