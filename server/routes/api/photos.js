@@ -16,7 +16,7 @@ router.get("/test", (req, res) => res.json({ message: "Photos works" }));
 
 /**
  * @route   POST api/photos/upload
- * @desc    Associates an array of uploaded photos to a user account
+ * @desc    Uploads photo to cloud and associates with user.
  * @access  Private
  */
 router.post(
