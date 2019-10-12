@@ -13,9 +13,6 @@ const PhotoSchema = new Schema({
   url: {
     type: String
   },
-  tags: {
-    type: Array[String]
-  },
   date: {
     type: Date,
     default: Date.now()
