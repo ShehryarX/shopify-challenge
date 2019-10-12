@@ -1,12 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys");
-const passport = require("passport");
-
-// TODO: Add validation!!!!!
 
 // schemas
 const User = require("../../../models/User").User;
@@ -31,6 +25,7 @@ router.post("/register", (req, res) => {
       return res.status(400).json(errors);
     }
 
+    // create new user
     const newUser = new User({
       name,
       email,
