@@ -18,11 +18,11 @@ router.get("/test", (req, res) => res.json({ message: "Photos works" }));
 
 /**
  * @route   POST api/photos/upload
- * @desc    Uploads photo to cloud and associates with user.
+ * @desc    Uploads photo to cloud and associates with user
  * @access  Private
  */
 router.post(
-  "/upload",
+  "/",
   passport.authenticate("jwt", { session: false }),
   multerUpload.any(),
   (req, res) => {
@@ -68,64 +68,46 @@ router.post(
 router.delete(
   "/",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    // photo ids from body
-    const { photoIds } = req.body;
+  async (req, res) => {
+    const { id } = req.body;
 
-    let succeededIds = [];
-    let failedIds = [];
-
-    // return type
-    class PhotoResponse {
-      constructor(id, succeeded, message) {
-        this.id = id;
-        this.message =  message || (succeeded ? "Deletion succeeded" : "Deletion failed")
+    try {
+      // find photo that belongs to this user
+      const photo = Photo.find({ _id: id, user: req.user.id });
+      if (!photo) {
+        return res.status(404).json("Failed to find photo");
       }
 
-      toString() {
-        return {id, message }
-      }
+      // delete the photo
+      await photo.remove();
+      return res.json("Successfully deleted photo");
+    } catch (e) {
+      console.log(e);
+      return res.json(e);
     }
-
-    // create array of promises
-    const promises = photoIds.map(async photoId => {
-      return new Promise(async (resolve, _reject) => {
-        try {
-          // find photo and delete
-          const photo = await Photo.find({ id: photoId, user: req.user.id })
-          if (photo) {
-            await photo.delete();
-            succeededIds.push(new PhotoResponse(photoId, true));
-          } else {
-            failedIds.push(new PhotoResponse(photoId, false, "Photo not found"));
-          }
-        } catch (e) {
-          console.error(e);
-          failedIds.push(new PhotoResponse(photoId, false));
-        }
-        resolve();
-      })
-    });
-
-    // wait until all photos are deleted
-    await Promise.all(promises);
-
-    // return deletion status
-    return res.json({ succeededIds, failedIds});
   }
 );
 
 /**
  * @route   POST api/photos/all
- * @desc    Returns list of all image URLs associated to a user account
+ * @desc    Returns list of all image URLs associated to a user account, searchable
+ *          by given text
  * @access  Private
  */
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { name } = req.query;
+
     // fetch all photos, ordered by date
-    Photo.find({ user: req.user.id })
+    Photo.find({
+      user: req.user.id,
+      name: {
+        $regex: name || "",
+        $options: "i"
+      }
+    })
       .sort({ date: -1 })
       .then(photos => res.json(photos))
       .catch(err => res.status(404).message("Unable to retrieve photos"));
