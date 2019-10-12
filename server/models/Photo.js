@@ -10,7 +10,7 @@ const PhotoSchema = new Schema({
     type: String,
     required: true
   },
-  path: {
+  url: {
     type: String
   },
   tags: {
