@@ -4,13 +4,13 @@ const multer = require("multer");
  * Takes an arbitrary file, filters it for an image, and
  * stores it locally.
  */
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const supported = ["image/jpeg", "image/png"];
-    const found = supported.find(file.mimetype);
+    const found = supported.find(extension => extension === file.mimetype);
 
     if (found) {
-      cb(null, "./files/images/");
+      cb(null, "./storage/images/");
     } else {
       cb({ message: "Not image or video file" }, false);
     }
@@ -20,7 +20,7 @@ var storage = multer.diskStorage({
   }
 });
 
-const multerUpload = multer({ storage: storage });
+const multerUpload = multer({ storage });
 
 module.exports = {
   multerUpload

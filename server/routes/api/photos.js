@@ -26,14 +26,16 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   multerUpload.any(),
   (req, res) => {
+    const { user, name, image } = req.body;
+
     // create image detail object
     const imageDetails = {
-      user: req.body.user.id,
-      name: req.body.imageName
+      user: user.id,
+      name
     };
 
     // find image
-    Photo.find({ name: imageDetails.name }).then(images => {
+    Photo.find({ name }).then(images => {
       // duplicate image found
       if (images.length > 1) {
         return res.json("Image already exists");
@@ -44,7 +46,7 @@ router.post(
 
       // upload image to cloudinary
       cloudinaryUpload
-        .upload(imageDetails.cloudImage)
+        .upload(image)
         .then(result => {
           imageDetails.url = result.url;
 

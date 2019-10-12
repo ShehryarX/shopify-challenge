@@ -2,10 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
+const cloudinary = require("cloudinary");
 
 // router imports
 const users = require("./routes/api/users");
-// const photos = require("./routes/api/photos");
+const photos = require("./routes/api/photos");
 
 // setup express
 const app = express();
@@ -33,7 +34,7 @@ cloudinary.config({
 
 // setup routes
 app.use("/api/users", users);
-// app.use("/api/photos", photos);
+app.use("/api/photos", photos);
 
 // inititialize port
 const port = process.env.PORT || 5000;
