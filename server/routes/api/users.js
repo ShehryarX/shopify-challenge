@@ -7,7 +7,7 @@ const passport = require("passport");
 const keys = require("../../config/keys");
 
 // schemas
-const User = require("../../../models/User").User;
+const User = require("../../models/User").User;
 
 /**
  * @route   GET api/users/test
@@ -17,7 +17,7 @@ const User = require("../../../models/User").User;
 router.get("/test", (req, res) => res.json({ message: "Users works" }));
 
 /**
- * @route   GET api/users/register
+ * @route   POST api/users/register
    @desc    Registers user with passed in fields
    @access  Public
  */
