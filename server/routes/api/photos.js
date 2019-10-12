@@ -6,7 +6,10 @@ const passport = require("passport");
 const { Photo } = require("../../models/Photo");
 
 // image upload utilities
-const { cloudinaryUpload } = require("../../providers/image/cloudinary");
+const {
+  cloudinaryUpload,
+  cloudinaryDelete
+} = require("../../providers/image/cloudinary");
 const { multerUpload } = require("../../providers/image/multer");
 
 /**
@@ -80,6 +83,7 @@ router.delete(
 
       // delete the photo
       await photo.remove();
+      cloudinaryDelete(id);
       return res.json("Successfully deleted photo");
     } catch (e) {
       console.log(e);
