@@ -20,4 +20,19 @@ router.get("/test", (req, res) => res.json({ message: "Photos works" }));
  * @access  Private
  */
 
+/**
+ * @route   POST api/photos/all
+ * @desc    Returns list of all image URLs associated to a user account
+ * @access  Private
+ */
+router.post("/all", (req, res) => {
+  // fetch all photos, ordered by date
+
+  // TODO: Is this how to retrieve multiple images?
+  Photo.find({ user: req.user.id })
+    .sort({ date: -1 })
+    .then(photos => res.json(photos))
+    .catch(err => res.status(404).message("Unable to retrieve photos"));
+});
+
 module.exports = router;
