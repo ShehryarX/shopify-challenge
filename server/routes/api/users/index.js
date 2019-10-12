@@ -20,9 +20,12 @@ router.get("/test", (req, res) => res.json({ message: "Users works" }));
    @desc    Registers user with passed in fields
    @access  Public
  */
-router.post("/register", (req, res) => {
-  User.findOne({ email: req.body.email }).then(user => {
-    // no duplicate users
+router.post("/register", async (req, res) => {
+  const { name, email, password } = req.body;
+  const errors = {};
+
+  try {
+    const user = User.findOne({ email });
     if (user) {
       errors.email = "Email already exists";
       return res.status(400).json(errors);
@@ -50,7 +53,9 @@ router.post("/register", (req, res) => {
         }
       });
     });
-  });
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 /**
@@ -59,11 +64,6 @@ router.post("/register", (req, res) => {
  * @access  Public
  */
 router.post("/login", (req, res) => {
-  const { errors, isValid } = validateLoginInput(req.body);
-
-  // check validation
-  if (!isValid) return res.status(400).json(errors);
-
   const { email, password } = req.body;
 
   // find user by email
