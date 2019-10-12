@@ -17,7 +17,7 @@ const options = {
  * Returns true in second done argument if user is authenticated,
  * otherwise false.
  */
-const strategy = passport => {
+const strategy = async passport => {
   passport.use(
     new JwtStrategy(options, (jwt_payload, done) => {
       try {

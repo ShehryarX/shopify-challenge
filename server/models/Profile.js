@@ -27,11 +27,11 @@ const ProfileSchema = new Schema({
   bio: {
     type: String
   },
-  github: {
-    type: String
-  },
   social: {
     youtube: {
+      type: String
+    },
+    github: {
       type: String
     },
     twitter: {
@@ -53,4 +53,6 @@ const ProfileSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("profile", ProfileSchema);
+module.exports = {
+  Profile: mongoose.model("profile", ProfileSchema)
+};
