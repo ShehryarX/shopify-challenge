@@ -5,24 +5,29 @@ const mongoose = require("mongoose");
 const User = mongoose.model("user");
 const keys = require("./keys");
 
+// passport configuration
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: keys.secretOrKey
 };
 
-module.exports = passport => {
+/**
+ * User validation strategy.
+ *
+ * Returns true in second done argument if user is authenticated,
+ * otherwise false.
+ */
+const strategy = passport => {
   passport.use(
     new JwtStrategy(options, (jwt_payload, done) => {
       try {
         const user = User.findById(jwt_payload.id);
-        if (user) {
-          done(null, user);
-        } else {
-          done(null, false);
-        }
+        done(null, user || false);
       } catch (e) {
         console.error(e);
       }
     })
   );
 };
+
+module.exports = strategy;
