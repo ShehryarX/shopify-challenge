@@ -5,7 +5,6 @@ const passport = require("passport");
 
 // router imports
 const users = require("./routes/api/users/");
-const profiles = require("./routes/api/profiles/");
 const posts = require("./routes/api/photos/");
 
 const app = express();
@@ -25,7 +24,6 @@ mongoose
 
 // setup routes
 app.use("/api/users", users);
-app.use("/api/profiles", profiles);
 app.use("/api/photos", posts);
 
 const port = process.env.PORT || 5000;
