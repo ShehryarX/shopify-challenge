@@ -7,7 +7,7 @@ const passport = require("passport");
 const keys = require("../../config/keys");
 
 // schemas
-const User = require("../../models/User").User;
+const { User } = require("../../models/User");
 
 /**
  * @route   GET api/users/test
@@ -25,8 +25,8 @@ router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   const errors = {};
 
-  try {
-    const user = User.findOne({ email });
+  User.findOne({ email }).then(user => {
+    // email already there
     if (user) {
       errors.email = "Email already exists";
       return res.status(400).json(errors);
@@ -54,13 +54,11 @@ router.post("/register", async (req, res) => {
         }
       });
     });
-  } catch (e) {
-    console.error(e);
-  }
+  });
 });
 
 /**
- * @route   GET api/users/login
+ * @route   POST api/users/login
  * @desc    Logs in user and returns corresponding JWT token
  * @access  Public
  */
@@ -68,9 +66,7 @@ router.post("/login", (req, res) => {
   const { email, password } = req.body;
   const errors = {};
 
-  try {
-    const user = User.findOne({ email });
-
+  User.findOne({ email }).then(user => {
     // user isn't found
     if (!user) {
       errors.email = "User not found";
@@ -101,9 +97,7 @@ router.post("/login", (req, res) => {
         }
       );
     });
-  } catch (e) {
-    console.error(e);
-  }
+  });
 });
 
 /**
@@ -111,14 +105,14 @@ router.post("/login", (req, res) => {
  * @desc    Return current user session
  * @access  Private
  */
-router.get(
+router.post(
   "/current",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { id, name, email } = req.user;
 
     // return user's name and email if authenticated
-    res.json({
+    return res.json({
       id,
       name,
       email
