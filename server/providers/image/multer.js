@@ -1,5 +1,9 @@
 const multer = require("multer");
 
+/**
+ * Takes an arbitrary file, filters it for an image, and
+ * stores it locally.
+ */
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const supported = ["image/jpeg", "image/png"];

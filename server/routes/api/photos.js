@@ -1,11 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
 const passport = require("passport");
 
 // schemas
 const { Photo } = require("../../models/Photo");
-const { User } = require("../../models/User");
 
 // image upload utilities
 const { cloudinaryUpload } = require("../../providers/image/cloudinary");
