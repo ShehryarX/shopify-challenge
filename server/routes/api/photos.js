@@ -7,6 +7,10 @@ const passport = require("passport");
 const { Photo } = require("../../models/Photo");
 const { User } = require("../../models/User");
 
+// image upload utilities
+const { cloudinaryUpload } = require("../../providers/image/cloudinary");
+const { multerUpload } = require("../../providers/image/multer");
+
 /**
  * @route   GET api/photos/test
  * @desc    Tests users route
@@ -22,7 +26,46 @@ router.get("/test", (req, res) => res.json({ message: "Photos works" }));
 router.post(
   "/upload",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {}
+  multerUpload.any(),
+  (req, res) => {
+    // create image detail object
+    const imageDetails = {
+      user: req.body.user.id,
+      name: req.body.imageName
+    };
+
+    // find image
+    Photo.find({ name: imageDetails.name }).then(images => {
+      // duplicate image found
+      if (images.length > 1) {
+        return res.json("Image already exists");
+      }
+
+      // set path for upload
+      imageDetails.path = req.files[0].path;
+
+      // upload image to cloudinary
+      cloudinaryUpload
+        .upload(imageDetails.cloudImage)
+        .then(result => {
+          imageDetails.url = result.url;
+
+          // store photo on database
+          Photo.create(imageDetails, (err, created) => {
+            if (err) {
+              return res.status(500).json("Unable to upload image");
+            } else {
+              res.json({ message: "Successfully uploaded!" });
+            }
+          });
+        })
+        .catch(err => {
+          return res
+            .status(500)
+            .json({ err, message: "Problem uploading image" });
+        });
+    });
+  }
 );
 
 /**
@@ -34,10 +77,9 @@ router.post(
   "/all",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    // fetch all photos, ordered by date
-
     // TODO: Is this how to retrieve multiple images?
-    Photo.find({ user: req.user.id })
+    // fetch all photos, ordered by date
+    Photo.find({ user: req.body.user.id })
       .sort({ date: -1 })
       .then(photos => res.json(photos))
       .catch(err => res.status(404).message("Unable to retrieve photos"));
