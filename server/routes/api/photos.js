@@ -13,16 +13,21 @@ const {
 const { multerUpload } = require("../../providers/image/multer");
 
 /**
- * @route   GET api/photos/test
- * @desc    Tests users route
- * @access  Public
+ * Tests the photos route
+ * @route               GET api/photos/test
+ * @group               Public
+ * @returns {string}    Returns message with expected behaviour
  */
 router.get("/test", (req, res) => res.json({ message: "Photos works" }));
 
 /**
- * @route   POST api/photos/upload
- * @desc    Uploads photo to cloud and associates with user
- * @access  Private
+ * Uploads photo associated to user
+ * @route               POST api/photos
+ * @group               Private
+ * @security            JWT
+ * @param {string}      name.body.required is the filename with extension
+ * @param {string}      path.files.required is the image
+ * @returns {Photo}     Returns the saved photo object
  */
 router.post(
   "/",
@@ -65,9 +70,12 @@ router.post(
 );
 
 /**
- * @route   DELETE api/photos/delete
- * @desc    Deletes list of image IDs associated to a user account
- * @access  Private
+ * Deletes list of image IDs associated to a user accoun
+ * @route               DELETE api/photos
+ * @group               Private
+ * @security            JWT
+ * @param {string}      id.body.required is the id of the photo to be deleted
+ * @returns {string}    Message that tells you that deletion has succeeded
  */
 router.delete(
   "/",
@@ -93,10 +101,12 @@ router.delete(
 );
 
 /**
- * @route   POST api/photos/all
- * @desc    Returns list of all image URLs associated to a user account, searchable
- *          by given text
- * @access  Private
+ * Returns list of all image URLs associated to a user account, searchable by given text
+ * @route                       GET api/photos
+ * @group                       Private
+ * @security                    JWT
+ * @param {string}              name.body.optional is the name you can search by, optionally
+ * @returns {Array.<Photo>}     returns array of photo objects
  */
 router.get(
   "/",

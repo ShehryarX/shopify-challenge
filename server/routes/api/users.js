@@ -14,16 +14,22 @@ const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
 
 /**
- * @route   GET api/users/test
- * @desc    Tests users route
- * @access  Public
+ * Tests that the user endpoints work
+ * @route               GET api/users/test
+ * @group               Public
+ * @returns {string}    Returns message with expected behaviour
  */
 router.get("/test", (req, res) => res.json({ message: "Users works" }));
 
 /**
- * @route   POST api/users/register
-   @desc    Registers user with passed in fields
-   @access  Public
+ * Registers a user
+ * @route               POST api/users/register
+ * @group               Public
+ * @param {string}      name.body.required
+ * @param {string}      email.body.required
+ * @param {string}      password.body.required
+ * @param {string}      password2.body.required
+ * @returns {User}      Returns newly created user object
  */
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -70,9 +76,12 @@ router.post("/register", (req, res) => {
 });
 
 /**
- * @route   POST api/users/login
- * @desc    Logs in user and returns corresponding JWT token
- * @access  Public
+ * Logs in user and returns corresponding JWT token
+ * @route               POST api/users/login
+ * @group               Public
+ * @param {string}      email.body.required
+ * @param {string}      password.body.required
+ * @returns {string}    Returns personally signed JWT expiring in 24 hours
  */
 router.post("/login", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
@@ -119,9 +128,11 @@ router.post("/login", (req, res) => {
 });
 
 /**
- * @route   GET api/users/current
- * @desc    Return current user session
- * @access  Private
+ * Returns information for current user
+ * @route               GET api/users/current
+ * @group               Private
+ * @security            JWT
+ * @returns {User}      Returns associated user object
  */
 router.get(
   "/current",
