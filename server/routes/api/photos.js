@@ -82,7 +82,7 @@ router.delete(
       }
 
       // delete the photo
-      await photo.remove();
+      await Photo.deleteOne({ _id: id, user: req.user.id });
       cloudinaryDelete(id);
       return res.json("Successfully deleted photo");
     } catch (e) {

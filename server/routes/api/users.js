@@ -45,6 +45,8 @@ router.post("/register", (req, res) => {
         if (err) {
           throw err;
         }
+
+        // hash password and save
         try {
           newUser.password = hash;
           await newUser.save();

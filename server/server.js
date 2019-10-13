@@ -20,7 +20,7 @@ require("./config/passport")(passport);
 // configure and connect to mongodb
 const db = require("./config/keys").mongoURL;
 mongoose
-  .connect(db, { useNewUrlParser: true })
+  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
@@ -36,6 +36,12 @@ cloudinary.config({
 app.use("/api/users", users);
 app.use("/api/photos", photos);
 
+// for further use
+app.get("/", (req, res) => res.json("static homepage"));
+
 // inititialize port
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Listening to port ${port}`));
+
+// export for testing purposes
+module.exports = app;
