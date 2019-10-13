@@ -37,8 +37,9 @@ router.post(
     Photo.find({ name }).then(images => {
       // duplicate image found
       if (images.length > 1) {
-        return res.json("Image already exists");
+        return res.status(400).json({ message: "Image already exists" });
       }
+
       // upload image to cloudinary
       cloudinaryUpload(path)
         .then(async result => {
@@ -53,11 +54,11 @@ router.post(
             await photo.save();
             return res.json(photo);
           } catch (e) {
-            console.error(e);
+            return res.sendStatus(500);
           }
         })
         .catch(err => {
-          console.log(err);
+          return res.sendStatus(500);
         });
     });
   }
@@ -78,16 +79,15 @@ router.delete(
       // find photo that belongs to this user
       const photo = Photo.find({ _id: id, user: req.user.id });
       if (!photo) {
-        return res.status(404).json("Failed to find photo");
+        return res.status(404).json({ message: "Failed to find photo" });
       }
 
       // delete the photo
       await Photo.deleteOne({ _id: id, user: req.user.id });
       cloudinaryDelete(id);
-      return res.json("Successfully deleted photo");
-    } catch (e) {
-      console.log(e);
-      return res.json(e);
+      return res.json({ message: "Successfully deleted photo" });
+    } catch (err) {
+      return res.status(500);
     }
   }
 );

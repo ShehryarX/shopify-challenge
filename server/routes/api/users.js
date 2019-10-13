@@ -39,7 +39,7 @@ router.post("/register", (req, res) => {
     // email already there
     if (user) {
       errors.email = "Email already exists";
-      return res.status(400).json(errors);
+      return res.status(409).json(errors);
     }
 
     // create new user
@@ -62,7 +62,7 @@ router.post("/register", (req, res) => {
           await newUser.save();
           return res.json(newUser);
         } catch (err) {
-          console.log(err);
+          return res.sendStatus(500);
         }
       });
     });
@@ -83,7 +83,6 @@ router.post("/login", (req, res) => {
   }
 
   const { email, password } = req.body;
-  const errors = {};
 
   User.findOne({ email }).then(user => {
     // user isn't found
@@ -96,7 +95,7 @@ router.post("/login", (req, res) => {
       // incorrect password
       if (!isMatched) {
         errors.password = "Password incorrect";
-        return res.status(400).json(errors);
+        return res.status(401).json(errors);
       }
 
       // user matched
