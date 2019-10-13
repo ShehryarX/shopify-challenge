@@ -41,10 +41,7 @@ describe("Photo", () => {
         .post("/api/photos/")
         .set("Authorization", token)
         .field("name", "temp.jpg")
-        .attach(
-          "file",
-          "/Users/sassad/workplace/photo-gallery/server/tests/mockPhotos/temp.jpg"
-        );
+        .attach("file", `${__dirname}/mockPhotos/temp.jpg`);
 
       expect(onePhotoResponse.body.length === 1);
 

@@ -12,8 +12,9 @@ class MockUser {
     // sets current user
     this.user = new User({
       name: "Test user",
-      email: `testuser${this.hash}@test.com`,
-      password: "Random hash"
+      email: `testUser1@test.com`,
+      password: "Random hash",
+      password2: "Random hash"
     });
   }
 
@@ -27,7 +28,12 @@ class MockUser {
     // insert user in db
     return request(server)
       .post("/api/users/register")
-      .send(this.user);
+      .send({
+        name: "Test user",
+        email: `testUser1@test.com`,
+        password: "Random hash",
+        password2: "Random hash"
+      });
   }
 
   async getToken() {
@@ -51,7 +57,7 @@ describe("MockUser", () => {
       expect(foundUser.length == 0);
 
       // insert into database
-      await mockUser.insertToDb();
+      const temp = await mockUser.insertToDb();
 
       // should only store one in database
       foundUser = await User.find({ email: mockUser.email });

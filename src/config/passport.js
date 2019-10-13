@@ -23,8 +23,8 @@ const strategy = passport => {
       try {
         const user = await User.findById(jwt_payload.id);
         done(null, user || false);
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        console.error(err);
       }
     })
   );

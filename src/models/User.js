@@ -19,8 +19,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
-    min: 8
+    required: true
   },
   date: {
     type: Date,
