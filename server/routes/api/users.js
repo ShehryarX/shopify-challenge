@@ -15,21 +15,26 @@ const validateLoginInput = require("../../validation/login");
 
 /**
  * Tests that the user endpoints work
- * @route               GET api/users/test
- * @group               Public
- * @returns {string}    Returns message with expected behaviour
+ * @route GET api/users/test
+ * @group Public
+ * @returns {string} Message with expected behaviour
  */
 router.get("/test", (req, res) => res.json({ message: "Users works" }));
 
 /**
- * Registers a user
- * @route               POST api/users/register
- * @group               Public
- * @param {string}      name.body.required
- * @param {string}      email.body.required
- * @param {string}      password.body.required
- * @param {string}      password2.body.required
- * @returns {User}      Returns newly created user object
+ * @typedef RegisterUserModel
+ * @property {string} name.required
+ * @property {string} email.required
+ * @property {string} password.required
+ * @property {string} password2.required
+ */
+
+/**
+ * Uploads photo associated to user
+ * @route POST api/users/register
+ * @group Public
+ * @param {RegisterUserModel.model} data.body
+ * @returns {User} Newly created user object
  */
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -76,12 +81,17 @@ router.post("/register", (req, res) => {
 });
 
 /**
- * Logs in user and returns corresponding JWT token
- * @route               POST api/users/login
- * @group               Public
- * @param {string}      email.body.required
- * @param {string}      password.body.required
- * @returns {string}    Returns personally signed JWT expiring in 24 hours
+ * @typedef LoginUserModel
+ * @property {string} email.required
+ * @property {string} password.required
+ */
+
+/**
+ * Uploads photo associated to user
+ * @route POST api/users/login
+ * @group Public
+ * @param {LoginUserModel.model} data.body
+ * @returns {User} Personally signed JWT expiring in 24 hours
  */
 router.post("/login", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
@@ -129,10 +139,10 @@ router.post("/login", (req, res) => {
 
 /**
  * Returns information for current user
- * @route               GET api/users/current
- * @group               Private
- * @security            JWT
- * @returns {User}      Returns associated user object
+ * @route GET api/users/current
+ * @group Private
+ * @security JWT
+ * @returns {User} Associated user object
  */
 router.get(
   "/current",

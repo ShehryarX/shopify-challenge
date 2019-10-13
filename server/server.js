@@ -64,7 +64,7 @@ expressSwagger({
     }
   },
   basedir: __dirname,
-  files: ["./routes/**/*.js"]
+  files: ["./routes/**/*.js", "./models/**/*.js"]
 });
 
 // inititialize port

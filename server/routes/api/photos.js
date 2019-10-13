@@ -16,18 +16,23 @@ const { multerUpload } = require("../../providers/image/multer");
  * Tests the photos route
  * @route               GET api/photos/test
  * @group               Public
- * @returns {string}    Returns message with expected behaviour
+ * @returns {string}    Message with expected behaviour
  */
 router.get("/test", (req, res) => res.json({ message: "Photos works" }));
 
 /**
+ * @typedef UploadPhotoModel
+ * @property {string} name.required - Filename with extension - eg: test1.jpg
+ * @property {string} path.required - Image as a blob string
+ */
+
+/**
  * Uploads photo associated to user
- * @route               POST api/photos
- * @group               Private
- * @security            JWT
- * @param {string}      name.body.required is the filename with extension
- * @param {string}      path.files.required is the image
- * @returns {Photo}     Returns the saved photo object
+ * @route POST api/photos
+ * @group Private
+ * @security JWT
+ * @param {UploadPhotoModel.model} data.body
+ * @returns {Photo} Saved photo object
  */
 router.post(
   "/",
@@ -70,12 +75,17 @@ router.post(
 );
 
 /**
- * Deletes list of image IDs associated to a user accoun
- * @route               DELETE api/photos
- * @group               Private
- * @security            JWT
- * @param {string}      id.body.required is the id of the photo to be deleted
- * @returns {string}    Message that tells you that deletion has succeeded
+ * @typedef DeletePhotoModel
+ * @property {string} id.required - ID of the photo to be deleted - eg: 19212389123912838
+ */
+
+/**
+ * Returns list of all image URLs associated to a user account, searchable by given text
+ * @route DELETE api/photos
+ * @group Private
+ * @security JWT
+ * @param {DeletePhotoModel.model} data.body
+ * @returns {Photo} Saved photo object
  */
 router.delete(
   "/",
@@ -101,18 +111,23 @@ router.delete(
 );
 
 /**
+ * @typedef ListPhotoModel
+ * @property {string} name.required - Filename with extension - eg: abc
+ */
+
+/**
  * Returns list of all image URLs associated to a user account, searchable by given text
- * @route                       GET api/photos
- * @group                       Private
- * @security                    JWT
- * @param {string}              name.body.optional is the name you can search by, optionally
- * @returns {Array.<Photo>}     returns array of photo objects
+ * @route GET api/photos
+ * @group Private
+ * @security JWT
+ * @param {ListPhotoModel.model} data.body
+ * @returns {Photo} Saved photo object
  */
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { name } = req.query;
+    const { name } = req.body;
 
     // fetch all photos, ordered by date
     Photo.find({
