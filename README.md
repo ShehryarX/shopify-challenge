@@ -15,4 +15,6 @@ To run the code, follow these steps:
 
 This will begin an instance of the server on `http://localhost:5000/` by default. You can test the endpoint using [Postman](https://www.getpostman.com).
 
+To run tests, run `npm run-script test`, and make sure you're in the `src` directory.
+
 To access documentation, perform steps 1 through 4 and visit `http://localhost:5000/api-docs`.
