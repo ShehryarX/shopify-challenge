@@ -5,7 +5,8 @@ This is my code for the Shopify Winter 2020 Internship interview.
 This code requires the following prerequisites to build:
 
 - [Node.js](https://nodejs.org/en/)
-- An mLab account and database
+- An [mLab](http://mlab.com/) account and database
+- A [Cloudinary](https://cloudinary.com) developer account
 
 To run the code, follow these steps:
 
