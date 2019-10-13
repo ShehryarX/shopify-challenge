@@ -37,7 +37,35 @@ app.use("/api/users", users);
 app.use("/api/photos", photos);
 
 // for further use
-app.get("/", (req, res) => res.json("static homepage"));
+app.get("/", (req, res) =>
+  res.json({ message: "serve the static homepage here" })
+);
+
+// hosts up docs on /api-docs
+const expressSwagger = require("express-swagger-generator")(app);
+expressSwagger({
+  swaggerDefinition: {
+    info: {
+      description: "Documenation",
+      title: "Photo Database Application",
+      version: "1.0.0"
+    },
+    host: "localhost:3000",
+    basePath: "/v1",
+    produces: ["application/json", "application/xml"],
+    schemes: ["http", "https"],
+    securityDefinitions: {
+      JWT: {
+        type: "apiKey",
+        in: "header",
+        name: "Authorization",
+        description: ""
+      }
+    }
+  },
+  basedir: __dirname,
+  files: ["./routes/**/*.js"]
+});
 
 // inititialize port
 const port = process.env.PORT || 5000;
