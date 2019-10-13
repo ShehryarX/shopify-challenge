@@ -9,6 +9,10 @@ const keys = require("../../config/keys");
 // schemas
 const { User } = require("../../models/User");
 
+// validation
+const validateRegisterInput = require("../../validation/register");
+const validateLoginInput = require("../../validation/login");
+
 /**
  * @route   GET api/users/test
  * @desc    Tests users route
@@ -22,8 +26,14 @@ router.get("/test", (req, res) => res.json({ message: "Users works" }));
    @access  Public
  */
 router.post("/register", (req, res) => {
+  const { errors, isValid } = validateRegisterInput(req.body);
+
+  // check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const { name, email, password } = req.body;
-  const errors = {};
 
   User.findOne({ email }).then(user => {
     // email already there
@@ -65,6 +75,13 @@ router.post("/register", (req, res) => {
  * @access  Public
  */
 router.post("/login", (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  // check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const { email, password } = req.body;
   const errors = {};
 
