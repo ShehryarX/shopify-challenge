@@ -50,8 +50,8 @@ expressSwagger({
       title: "Photo Database Application",
       version: "1.0.0"
     },
-    host: "localhost:3000",
-    basePath: "/v1",
+    host: "localhost:5000",
+    basePath: "/",
     produces: ["application/json", "application/xml"],
     schemes: ["http", "https"],
     securityDefinitions: {
