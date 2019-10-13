@@ -20,7 +20,7 @@ Create a file `src/config/keys.js` with the following contents:
 
 ```
 const keys = {
-  mongoURL: "mongodb://<username>:<pasword>@datacenter.mlab.com:33268/server_name",
+  mongoURL: "mongodb://<username>:<password>@datacenter.mlab.com:33268/server_name",
   cloudinaryConfig: {
     apiKey: "XXXXXXXXXXXXXXX",
     apiSecret: "XXXXXXXXXXXXXXXXXXX"
