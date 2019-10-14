@@ -97,6 +97,9 @@ Tests are run using the `mocha` framework, and are stored in `/src/tests/`.
 
 - This test file uses the resuable test class in `users.test.js` to upload and delete uploaded photos
 
+Running the tests should give you an image similar to this:
+![testing photo]("https://user-images.githubusercontent.com/19887742/66777256-8c6d7700-ee96-11e9-9cb5-e4b3c70bc640.png")
+
 ## Improvements and Future Prospects
 
 - Node.js is a back-end framework that should be used for fast I/O operations, not uploading photos, since that would block any other requests
