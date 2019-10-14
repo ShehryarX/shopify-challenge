@@ -77,16 +77,16 @@ date: Date
 
 ## User Flow
 
-- Users can register using the `POST /api/users/register` endpoint, which will return a `User` object if successfully regisetered
+- Users can register using the `POST /api/users/register` endpoint, which will return a `User` object if successfully registered
 - Users can then login using the `POST /api/users/login` endpoint, which will return a `JWT`, which will encode the user ID as well as an expiry timestamp, upon successful login
-- Now that the user is logged in, they must pass their `JWT` as a header with key `Authorization` for all private endpoints
-- Users can upload photo by hitting `POST /api/photos` with a photo blob and required photo fields, and will get a `Photo` object upon completion; noting that by design, duplicate filenames are not allowed, but would be a one-liner to implement
+- Now that the user is logged in, they must pass their `JWT` as a header with key `Authorization` to access all private endpoints; this ensures that users can mutate photos that exist only on their account
+- Users can upload a photo by hitting `POST /api/photos` with a photo blob and required metadata, and will get a `Photo` object upon completion; noting that by design, duplicate filenames are not allowed, but would be a one-liner to implement
 - Users can delete any photo by hitting `DELETE /api/photos` passing in the photo ID; they will recieve a success message with a 200 code if the photo is successfully deleted
 - Users can list all their images by hitting `GET /api/photos`, and this will be sorted by date by default; they can optionally search photos by filename by passing in a query parameter
 
 ## Testing
 
-Tests are stored in `/src/tests/`:
+Tests are run using the `mocha` framework, and are stored in `/src/tests/`.
 
 1. `users.test.js`
 
@@ -103,9 +103,9 @@ Tests are stored in `/src/tests/`:
   - A better solution to this is to user `Worker`, which is a multithreaded API for situations like these
   - Another solution could be to get the client to upload the photo using a web SDK, and pass the URL to the backend
 - Bulk operations
-  - To perform bulk operations, namely add or delete, you could call the single deletion api numerous times, or create a similar endpoint but also uses `Promise.all` to wait for all requests to complete
+  - To perform bulk operations, namely add or delete, you could call the single deletion API numerous times, or create a similar endpoint but use `Promise.all` to wait for all requests to complete
 - Documentation
   - Currently documentation was auto-generated through a third party extension, which enforces their style guide, but also imposes a lot of restrictions
 - Deployment
-  - I would use Docker to containerize this server with a continuous integration pipeline to ensure uptime
-  - I chose not to do this because using a free hosting service like Heroku would be prone to downtime because of their free tier
+  - I would use Docker to containerize this server with a continuous integration pipeline to ensure maximum uptime
+  - I chose not to do this because using a free hosting service like Heroku would be prone to downtime because of their free tier (might be faster to spin it up locally)
